@@ -11,6 +11,10 @@ authors = [
 
 description = """
 A rust library for encoding and decoding bencode with enforced canonicalization rules.
+
+For the needs of CJDNS project a patch applied which allows to deserialize numbers with leading zeroes.
+This is against the Bencode spec, but required for CJDNS for compatibility reasons (original CJDNS implementation
+uses own bencode library which violates this requirement).
 """
 
 repository = "https://github.com/P3KI/bendy"

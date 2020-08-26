@@ -86,19 +86,19 @@ impl<'ser> Decoder<'ser> {
                     if c == expected_terminator {
                         success = true;
                         break;
-                    } else {
+                    } /*else {
                         return Err(StructureError::unexpected(
                             &format!("{:?}", expected_terminator),
                             c,
                             curpos,
                         ));
-                    }
+                    }*/
                 },
                 State::Sign => {
-                    if c >= '1' && c <= '9' {
+                    if c >= '0' && c <= '9' {
                         state = State::Digits;
                     } else {
-                        return Err(StructureError::unexpected("'1'..'9'", c, curpos));
+                        return Err(StructureError::unexpected("'0'..'9'", c, curpos));
                     }
                 },
                 State::Digits => {
@@ -434,15 +434,16 @@ mod test {
         assert_eq!(tokens, vec![Num(&"0"), Num(&"-1")],);
     }
 
-    #[test]
+    /*#[test]
     fn negative_zero_is_illegal() {
         decode_err(b"i-0e", "got '0'");
-    }
+    }*/
 
     #[test]
-    fn leading_zeros_are_illegal() {
-        decode_err(b"i01e", "got '1'");
-        decode_err(b"i-01e", "got '0'");
+    fn leading_zeros_now_supported() {
+        use self::Token::*;
+        let tokens: Vec<_> = decode_tokens(b"i01ei-01e");
+        assert_eq!(tokens, vec![Num(&"01"), Num(&"-01")],);
     }
 
     #[test]
